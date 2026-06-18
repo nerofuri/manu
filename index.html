@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday, My Love</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Nunito:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --rose: #c0587e;
+            --light-rose: #e8839b;
+            --blush: #f9a8c9;
+            --cream: #fff5f7;
+            --deep: #7d2c45;
+            --gold: #d4a057;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: #1a0010;
+            overflow-x: hidden;
+        }
+
+        /* ─── COUNTDOWN SCREEN ─────────────────────────────── */
+        #countdown-screen {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, #0d0008 0%, #3d0a22 50%, #0d0008 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: opacity 1.5s ease, visibility 1.5s;
+        }
+
+        #countdown-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .hearts-container {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .float-heart {
+            position: absolute;
+            bottom: -60px;
+            animation: floatUp linear infinite;
+            user-select: none;
+        }
+
+        @keyframes floatUp {
+            0%   { transform: translateY(0)      rotate(0deg);   opacity: 0; }
+            10%  {                                                opacity: 0.8; }
+            90%  {                                                opacity: 0.6; }
+            100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
+        }
+
+        .cd-eyebrow {
+            position: relative;
+            z-index: 1;
+            font-size: clamp(0.65rem, 1.8vw, 0.85rem);
+            color: rgba(249, 168, 201, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 6px;
+            margin-bottom: 1rem;
+        }
+
+        .cd-title {
+            position: relative;
+            z-index: 1;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: clamp(1.6rem, 5vw, 3.2rem);
+            color: var(--blush);
+            text-align: center;
+            text-shadow: 0 0 40px rgba(249, 168, 201, 0.4);
+            letter-spacing: 2px;
+        }
+
+        .ornament {
+            position: relative;
+            z-index: 1;
+            color: rgba(192, 88, 126, 0.5);
+            font-size: 1.2rem;
+            letter-spacing: 12px;
+            margin: 1.8rem 0;
+        }
+
+        .cd-grid {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            gap: clamp(0.4rem, 2.5vw, 1.5rem);
+        }
+
+        .cd-unit {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .cd-num {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3.5rem, 11vw, 7.5rem);
+            font-weight: 700;
+            color: #fff;
+            line-height: 1;
+            min-width: clamp(90px, 16vw, 165px);
+            text-align: center;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(249, 168, 201, 0.2);
+            border-radius: 18px;
+            padding: 0.6rem 0.4rem;
+            text-shadow: 0 0 50px rgba(192, 88, 126, 0.7);
+            backdrop-filter: blur(6px);
+        }
+
+        .cd-label {
+            font-size: clamp(0.55rem, 1.4vw, 0.8rem);
+            color: rgba(249, 168, 201, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 4px;
+        }
+
+        .cd-sep {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 7vw, 5rem);
+            color: var(--blush);
+            margin-bottom: 1.8rem;
+            opacity: 0.4;
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 0.4; }
+            50%       { opacity: 0.05; }
+        }
+
+        /* ─── MAIN SCREEN ──────────────────────────────────── */
+        #main-screen {
+            display: none;
+            opacity: 0;
+            transition: opacity 1.5s ease;
+        }
+
+        #main-screen.visible {
+            display: block;
+        }
+
+        /* Hero */
+        .hero {
+            min-height: 100vh;
+            background: linear-gradient(160deg, #0d0008 0%, #3d0a22 55%, #0d0008 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center, rgba(192, 88, 126, 0.18) 0%, transparent 65%);
+            pointer-events: none;
+        }
+
+        .hero-badge {
+            position: relative;
+            z-index: 1;
+            font-size: clamp(0.65rem, 1.6vw, 0.85rem);
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 7px;
+            margin-bottom: 1.8rem;
+        }
+
+        .hero-name {
+            position: relative;
+            z-index: 1;
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3.5rem, 14vw, 9rem);
+            color: #fff;
+            line-height: 1;
+            text-shadow: 0 0 80px rgba(192, 88, 126, 0.5);
+        }
+
+        .hero-sub {
+            position: relative;
+            z-index: 1;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: clamp(1rem, 3.5vw, 2rem);
+            color: var(--blush);
+            margin-top: 1.5rem;
+            opacity: 0.85;
+        }
+
+        .scroll-hint {
+            position: absolute;
+            bottom: 2rem;
+            z-index: 1;
+            color: rgba(249, 168, 201, 0.35);
+            font-size: 0.75rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            animation: nudge 2s ease-in-out infinite;
+        }
+
+        @keyframes nudge {
+            0%, 100% { transform: translateY(0); }
+            50%       { transform: translateY(8px); }
+        }
+
+        /* Reasons */
+        .reasons-section {
+            background: var(--cream);
+            padding: 6rem 2rem;
+        }
+
+        .section-head {
+            text-align: center;
+            margin-bottom: 3.5rem;
+        }
+
+        .eyebrow {
+            font-size: 0.75rem;
+            color: var(--rose);
+            text-transform: uppercase;
+            letter-spacing: 6px;
+            margin-bottom: 0.8rem;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 5.5vw, 3.8rem);
+            color: var(--deep);
+            line-height: 1.1;
+        }
+
+        .reasons-grid {
+            max-width: 960px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .reason-card {
+            background: #fff;
+            border-radius: 22px;
+            padding: 2rem 1.8rem;
+            box-shadow: 0 4px 28px rgba(192, 88, 126, 0.08);
+            border: 1px solid rgba(192, 88, 126, 0.1);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .reason-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 4px; height: 100%;
+            background: linear-gradient(to bottom, var(--rose), var(--blush));
+            border-radius: 4px 0 0 4px;
+        }
+
+        .reason-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(192, 88, 126, 0.18);
+        }
+
+        .reason-num {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            color: var(--blush);
+            line-height: 1;
+            margin-bottom: 0.6rem;
+        }
+
+        .reason-text {
+            font-size: 0.97rem;
+            color: #555;
+            line-height: 1.75;
+        }
+
+        /* Gallery */
+        .gallery-section {
+            background: linear-gradient(160deg, #0d0008 0%, #3d0a22 100%);
+            padding: 6rem 2rem;
+        }
+
+        .gallery-section .eyebrow { color: var(--blush); }
+        .gallery-section .section-title { color: #fff; }
+
+        .gallery-grid {
+            max-width: 1020px;
+            margin: 2.5rem auto 0;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        .gallery-item {
+            border-radius: 16px;
+            overflow: hidden;
+            aspect-ratio: 1;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(249, 168, 201, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover { transform: scale(1.02); }
+        .gallery-item:first-child { grid-column: span 2; grid-row: span 2; }
+
+        .gallery-item img {
+            width: 100%; height: 100%;
+            object-fit: cover; display: block;
+        }
+
+        .photo-ph {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            color: rgba(249, 168, 201, 0.3);
+        }
+
+        .photo-ph .icon { font-size: 2.2rem; }
+        .photo-ph p { font-size: 0.7rem; letter-spacing: 1px; text-align: center; }
+
+        /* Closing */
+        .closing-section {
+            background: var(--cream);
+            padding: 7rem 2rem;
+            text-align: center;
+        }
+
+        .closing-heart {
+            font-size: 4.5rem;
+            display: inline-block;
+            animation: heartbeat 1.4s ease-in-out infinite;
+            color: var(--rose);
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            14%       { transform: scale(1.25); }
+            28%       { transform: scale(1); }
+            42%       { transform: scale(1.15); }
+            70%       { transform: scale(1); }
+        }
+
+        .closing-msg {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: clamp(1.3rem, 3.5vw, 2.2rem);
+            color: var(--deep);
+            max-width: 620px;
+            margin: 2rem auto 1.5rem;
+            line-height: 1.6;
+        }
+
+        .closing-sig {
+            font-size: 0.82rem;
+            color: var(--rose);
+            letter-spacing: 5px;
+            text-transform: uppercase;
+        }
+
+        /* Confetti */
+        .confetti {
+            position: fixed;
+            top: -12px;
+            border-radius: 2px;
+            animation: cfall linear forwards;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        @keyframes cfall {
+            to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+        }
+
+        @media (max-width: 600px) {
+            .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+            .gallery-item:first-child { grid-column: span 2; grid-row: span 1; aspect-ratio: 2/1; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ═══════════ COUNTDOWN SCREEN ═══════════ -->
+<div id="countdown-screen">
+    <div class="hearts-container" id="cd-hearts"></div>
+
+    <div class="cd-eyebrow">counting down to</div>
+    <div class="cd-title">Her Special Day</div>
+
+    <div class="ornament">❧ ♡ ❧</div>
+
+    <div class="cd-grid">
+        <div class="cd-unit">
+            <div class="cd-num" id="days">00</div>
+            <div class="cd-label">Days</div>
+        </div>
+        <div class="cd-sep">:</div>
+        <div class="cd-unit">
+            <div class="cd-num" id="hours">00</div>
+            <div class="cd-label">Hours</div>
+        </div>
+        <div class="cd-sep">:</div>
+        <div class="cd-unit">
+            <div class="cd-num" id="minutes">00</div>
+            <div class="cd-label">Minutes</div>
+        </div>
+        <div class="cd-sep">:</div>
+        <div class="cd-unit">
+            <div class="cd-num" id="seconds">00</div>
+            <div class="cd-label">Seconds</div>
+        </div>
+    </div>
+
+    <div class="ornament" style="margin-top: 2rem">✦ ✦ ✦</div>
+</div>
+
+<!-- ═══════════ MAIN BIRTHDAY SCREEN ═══════════ -->
+<div id="main-screen">
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hearts-container" id="hero-hearts"></div>
+        <div class="hero-badge">✦ &nbsp; Happy Birthday &nbsp; ✦</div>
+        <div class="hero-name" id="js-name">My Love</div>
+        <div class="hero-sub">Today is all about you, my darling</div>
+        <div class="scroll-hint">↓ &nbsp; scroll &nbsp; ↓</div>
+    </section>
+
+    <!-- Reasons I Love You -->
+    <section class="reasons-section">
+        <div class="section-head">
+            <div class="eyebrow">from my heart</div>
+            <div class="section-title">Reasons I Love You</div>
+        </div>
+        <div class="reasons-grid" id="reasons-grid"></div>
+    </section>
+
+    <!-- Photo Gallery -->
+    <section class="gallery-section">
+        <div class="section-head">
+            <div class="eyebrow">our memories</div>
+            <div class="section-title">Us</div>
+        </div>
+        <div class="gallery-grid" id="gallery-grid"></div>
+    </section>
+
+    <!-- Closing -->
+    <section class="closing-section">
+        <div class="closing-heart">♥</div>
+        <div class="closing-msg" id="js-closing"></div>
+        <div class="closing-sig">With all my love</div>
+    </section>
+
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════
+   ✏️  CUSTOMIZE EVERYTHING BELOW
+   ═══════════════════════════════════════════════ */
+
+// Her birthday — when the countdown reaches this moment, the site reveals itself.
+// Format: new Date(YEAR, MONTH-1, DAY, HOUR, MINUTE, SECOND)
+// Example: July 4 2026 at midnight → new Date(2026, 6, 4, 0, 0, 0)
+const BIRTHDAY = new Date(2026, 5, 20, 0, 0, 0);
+
+// Her name shown on the main page
+const HER_NAME = "My Love";
+
+// Reasons you love her (add or remove as many as you like)
+const REASONS = [
+    "Your laugh is the most beautiful sound in the world to me.",
+    "The way you care for everyone around you without even thinking about it.",
+    "How you make even the most ordinary days feel magical.",
+    "Your strength — and the quiet grace you carry it with.",
+    "The way you look at me like I am enough.",
+    "Every little thing about you I'm still discovering.",
+];
+
+// Photo gallery — replace `src: null` with real image paths or URLs.
+// The first item spans 2×2 — great for a favourite photo together.
+const PHOTOS = [
+    { src: null, caption: "My favourite photo of us" },
+    { src: null, caption: "Us" },
+    { src: null, caption: "Us" },
+    { src: null, caption: "Us" },
+    { src: null, caption: "Us" },
+];
+
+// Message at the bottom of the page
+const CLOSING = "Happy Birthday, my love. Every single day with you is a gift I never want to return.";
+
+/* ═══════════════════════════════════════════════
+   END OF CUSTOMISATION — no need to touch below
+   ═══════════════════════════════════════════════ */
+
+document.getElementById('js-name').textContent    = HER_NAME;
+document.getElementById('js-closing').textContent = CLOSING;
+
+// Build reason cards
+const reasonsGrid = document.getElementById('reasons-grid');
+REASONS.forEach((text, i) => {
+    const card = document.createElement('div');
+    card.className = 'reason-card';
+    card.innerHTML = `<div class="reason-num">${String(i + 1).padStart(2, '0')}</div>
+                      <div class="reason-text">${text}</div>`;
+    reasonsGrid.appendChild(card);
+});
+
+// Build gallery
+const galleryGrid = document.getElementById('gallery-grid');
+PHOTOS.forEach(photo => {
+    const item = document.createElement('div');
+    item.className = 'gallery-item';
+    if (photo.src) {
+        item.innerHTML = `<img src="${photo.src}" alt="${photo.caption}">`;
+    } else {
+        item.innerHTML = `<div class="photo-ph"><div class="icon">📷</div><p>${photo.caption}</p></div>`;
+    }
+    galleryGrid.appendChild(item);
+});
+
+// Floating hearts
+const HEART_GLYPHS = ['♥', '♡', '❤', '💕', '🌹', '✿'];
+
+function spawnHeart(container) {
+    const el = document.createElement('div');
+    el.className = 'float-heart';
+    el.textContent = HEART_GLYPHS[Math.floor(Math.random() * HEART_GLYPHS.length)];
+    el.style.cssText = `
+        left: ${Math.random() * 100}vw;
+        font-size: ${Math.random() * 18 + 10}px;
+        animation-duration: ${Math.random() * 9 + 7}s;
+        animation-delay: ${Math.random() * 2}s;
+        color: hsl(${330 + Math.random() * 30}, 70%, ${60 + Math.random() * 20}%);
+    `;
+    container.appendChild(el);
+    el.addEventListener('animationend', () => el.remove());
+}
+
+const cdHearts   = document.getElementById('cd-hearts');
+const heroHearts = document.getElementById('hero-hearts');
+setInterval(() => spawnHeart(cdHearts), 700);
+
+// Confetti burst
+function launchConfetti() {
+    const palette = ['#c0587e','#f9a8c9','#d4a057','#ffffff','#7d2c45','#e8839b','#ffd6e7'];
+    for (let i = 0; i < 140; i++) {
+        setTimeout(() => {
+            const p = document.createElement('div');
+            p.className = 'confetti';
+            const size = Math.random() * 9 + 5;
+            p.style.cssText = `
+                left: ${Math.random() * 100}vw;
+                width: ${size}px; height: ${size}px;
+                background: ${palette[Math.floor(Math.random() * palette.length)]};
+                border-radius: ${Math.random() > 0.5 ? '50%' : '2px'};
+                animation-duration: ${Math.random() * 3 + 2.5}s;
+                animation-delay: ${Math.random() * 0.6}s;
+            `;
+            document.body.appendChild(p);
+            p.addEventListener('animationend', () => p.remove());
+        }, i * 18);
+    }
+}
+
+// Reveal birthday page
+let revealed = false;
+function reveal() {
+    if (revealed) return;
+    revealed = true;
+
+    const main = document.getElementById('main-screen');
+    main.style.display = 'block';
+    launchConfetti();
+
+    const cdScreen = document.getElementById('countdown-screen');
+    cdScreen.classList.add('hidden');
+
+    setTimeout(() => {
+        cdScreen.style.display = 'none';
+        main.style.opacity = '1';
+        setInterval(() => spawnHeart(heroHearts), 900);
+    }, 1600);
+}
+
+// Countdown tick
+function tick() {
+    const diff = BIRTHDAY - Date.now();
+    if (diff <= 0) { reveal(); return; }
+
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor((diff % 86400000) / 3600000);
+    const m = Math.floor((diff % 3600000)  / 60000);
+    const s = Math.floor((diff % 60000)    / 1000);
+
+    document.getElementById('days').textContent    = String(d).padStart(2, '0');
+    document.getElementById('hours').textContent   = String(h).padStart(2, '0');
+    document.getElementById('minutes').textContent = String(m).padStart(2, '0');
+    document.getElementById('seconds').textContent = String(s).padStart(2, '0');
+}
+
+tick();
+setInterval(tick, 1000);
+</script>
+</body>
+</html>
