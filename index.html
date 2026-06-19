@@ -881,12 +881,12 @@ const REASONS = [
     "Every little thing about you I'm still discovering.",
 ];
 
-// Photo gallery — replace `src: null` with real image paths or URLs.
-// The first item spans 2×2 — great for a favourite photo together.
+// Photo gallery — add src for images, or type:'video' + src for clips.
+// The first item spans 2×2 — best for a portrait/favourite photo.
 const PHOTOS = [
-    { src: null, caption: "My favourite photo of her" },
-    { src: null, caption: "Her" },
-    { src: null, caption: "Her" },
+    { src: 'media/photo1.jpg',  caption: "My favourite photo of her" },
+    { src: 'media/photo2.jpg',  caption: "Her" },
+    { type: 'video', src: 'media/video.mp4', caption: "Her" },
     { src: null, caption: "Her" },
     { src: null, caption: "Her" },
 ];
@@ -948,7 +948,10 @@ const galleryGrid = document.getElementById('gallery-grid');
 PHOTOS.forEach(photo => {
     const item = document.createElement('div');
     item.className = 'gallery-item';
-    if (photo.src) {
+    if (photo.type === 'video' && photo.src) {
+        item.innerHTML = `<video src="${photo.src}" playsinline loop muted autoplay
+            style="width:100%;height:100%;object-fit:cover;display:block;"></video>`;
+    } else if (photo.src) {
         item.innerHTML = `<img src="${photo.src}" alt="${photo.caption}">`;
     } else {
         item.innerHTML = `<div class="photo-ph"><div class="icon">📷</div><p>${photo.caption}</p></div>`;
