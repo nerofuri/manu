@@ -402,79 +402,106 @@
             to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
         }
 
-        /* ─── LETTERS SECTION ──────────────────────────────── */
+        /* ─── LETTERS SECTION — Apothecary Diaries ─────────── */
         .letters-section {
-            background: var(--cream);
+            background: linear-gradient(160deg, #0a0500 0%, #1c0900 50%, #0a0500 100%);
             padding: 6rem 2rem;
+            position: relative;
+            overflow: hidden;
         }
 
-        .letters-section .eyebrow { color: var(--rose); }
-        .letters-section .section-title { color: var(--deep); }
+        .letters-section::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                repeating-linear-gradient( 45deg, transparent, transparent 28px, rgba(201,168,76,0.04) 28px, rgba(201,168,76,0.04) 29px),
+                repeating-linear-gradient(-45deg, transparent, transparent 28px, rgba(201,168,76,0.04) 28px, rgba(201,168,76,0.04) 29px);
+            pointer-events: none;
+        }
+
+        .letters-section .eyebrow { color: #c9a84c; letter-spacing: 7px; }
+        .letters-section .section-title { color: #f5e6c8; }
 
         .letters-grid {
-            max-width: 960px;
+            max-width: 680px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.8rem;
+            position: relative;
         }
 
         .letter-card {
-            background: #fff;
-            border-radius: 22px;
-            padding: 2.2rem 2rem;
-            box-shadow: 0 4px 28px rgba(192, 88, 126, 0.08);
-            border: 1px solid rgba(192, 88, 126, 0.12);
+            background: linear-gradient(160deg, #1c0d05 0%, #2e1608 100%);
+            border-radius: 4px;
+            padding: 2.5rem 2rem;
+            border: 1px solid rgba(201, 168, 76, 0.28);
+            box-shadow: 0 6px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(201,168,76,0.12);
             cursor: pointer;
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 1rem;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s;
             text-align: center;
             position: relative;
             overflow: hidden;
         }
 
+        .letter-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(to right, transparent, #8c1c13, #c9a84c, #8c1c13, transparent);
+        }
+
         .letter-card::after {
             content: '';
             position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, rgba(192,88,126,0.06) 0%, transparent 60%);
-            pointer-events: none;
+            bottom: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(to right, transparent, #8c1c13, #c9a84c, #8c1c13, transparent);
         }
 
         .letter-card:hover {
             transform: translateY(-6px);
-            box-shadow: 0 12px 44px rgba(192, 88, 126, 0.2);
+            border-color: rgba(201, 168, 76, 0.55);
+            box-shadow: 0 14px 48px rgba(140, 28, 19, 0.4);
         }
 
         .letter-seal {
-            width: 64px; height: 64px;
-            background: linear-gradient(135deg, var(--rose), var(--deep));
+            width: 72px; height: 72px;
+            background: radial-gradient(circle, #8c1c13 0%, #5c0e0a 100%);
             border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            font-size: 1.8rem;
-            box-shadow: 0 4px 16px rgba(192, 88, 126, 0.35);
-            transition: transform 0.3s ease;
+            font-size: 2rem;
+            border: 2px solid rgba(201, 168, 76, 0.4);
+            box-shadow: 0 4px 20px rgba(140, 28, 19, 0.6), 0 0 0 4px rgba(201,168,76,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .letter-card:hover .letter-seal { transform: scale(1.1) rotate(-5deg); }
+        .letter-card:hover .letter-seal {
+            transform: scale(1.1) rotate(-5deg);
+            box-shadow: 0 6px 28px rgba(140, 28, 19, 0.8), 0 0 0 6px rgba(201,168,76,0.12);
+        }
 
         .letter-title {
             font-family: 'Playfair Display', serif;
-            font-size: 1.15rem;
-            color: var(--deep);
+            font-size: 1.1rem;
+            color: #f5e6c8;
+            letter-spacing: 0.5px;
         }
 
         .letter-hint {
-            font-size: 0.75rem;
-            color: rgba(192, 88, 126, 0.55);
+            font-size: 0.7rem;
+            color: rgba(201, 168, 76, 0.45);
             text-transform: uppercase;
-            letter-spacing: 3px;
+            letter-spacing: 4px;
         }
 
-        /* ─── LETTER MODAL ──────────────────────────────────── */
+        /* ─── LETTER MODAL — Scroll / Parchment ─────────────── */
         #letter-modal {
             position: fixed;
             inset: 0;
@@ -496,80 +523,101 @@
         .modal-backdrop {
             position: absolute;
             inset: 0;
-            background: rgba(13, 0, 8, 0.85);
-            backdrop-filter: blur(6px);
+            background: rgba(5, 2, 0, 0.88);
+            backdrop-filter: blur(8px);
         }
 
         .modal-paper {
             position: relative;
-            background: #fffaf8;
-            border-radius: 24px;
+            background: linear-gradient(180deg, #f7e8c8 0%, #f0ddb2 40%, #ead5a5 100%);
+            border-radius: 2px;
             max-width: 680px;
             width: 100%;
             max-height: 88vh;
             overflow-y: auto;
-            padding: 3.5rem 3rem 3rem;
-            box-shadow: 0 30px 80px rgba(0,0,0,0.45);
+            padding: 4rem 3.5rem 3.5rem;
+            box-shadow: 0 0 0 6px #5c1a08, 0 0 0 8px rgba(201,168,76,0.4), 0 40px 80px rgba(0,0,0,0.6);
             transform: scale(0.9) translateY(20px);
             transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            border: 1px solid rgba(192, 88, 126, 0.15);
         }
 
         #letter-modal.open .modal-paper {
             transform: scale(1) translateY(0);
         }
 
+        /* lined paper effect */
         .modal-paper::before {
             content: '';
             position: absolute;
-            top: 0; left: 3rem; right: 3rem;
-            height: 3px;
-            background: linear-gradient(to right, transparent, var(--blush), transparent);
+            inset: 0;
+            background: repeating-linear-gradient(
+                180deg,
+                transparent 0px,
+                transparent 29px,
+                rgba(120, 70, 30, 0.09) 29px,
+                rgba(120, 70, 30, 0.09) 30px
+            );
+            pointer-events: none;
             border-radius: 2px;
         }
 
+        /* gold side borders */
+        .modal-paper::after {
+            content: '';
+            position: absolute;
+            top: 3rem; bottom: 3rem;
+            left: 0; right: 0;
+            border-left: 2px solid rgba(201, 168, 76, 0.35);
+            border-right: 2px solid rgba(201, 168, 76, 0.35);
+            pointer-events: none;
+        }
+
+        .modal-paper > * { position: relative; z-index: 1; }
+
         .modal-close {
             position: absolute;
-            top: 1.2rem; right: 1.4rem;
+            top: 1rem; right: 1.2rem;
             background: none; border: none;
-            font-size: 1.6rem;
-            color: rgba(192, 88, 126, 0.4);
+            font-size: 1.4rem;
+            color: rgba(140, 28, 19, 0.45);
             cursor: pointer;
             line-height: 1;
             transition: color 0.2s, transform 0.2s;
-            padding: 0.2rem 0.4rem;
+            padding: 0.3rem 0.5rem;
+            z-index: 2;
         }
 
-        .modal-close:hover { color: var(--rose); transform: scale(1.2); }
+        .modal-close:hover { color: #8c1c13; transform: scale(1.2); }
 
         .modal-seal {
             text-align: center;
             font-size: 2.5rem;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.2rem;
         }
 
         .modal-letter-title {
             font-family: 'Playfair Display', serif;
-            font-size: clamp(1.4rem, 3.5vw, 2rem);
-            color: var(--deep);
+            font-size: clamp(1.2rem, 3.2vw, 1.7rem);
+            color: #5c1a08;
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 1.8rem;
+            line-height: 1.3;
         }
 
         .modal-divider {
             text-align: center;
-            color: var(--blush);
-            letter-spacing: 8px;
-            font-size: 0.9rem;
+            color: #8c1c13;
+            letter-spacing: 10px;
+            font-size: 0.85rem;
             margin-bottom: 2rem;
         }
 
         .modal-body {
             font-family: 'Playfair Display', serif;
             font-style: italic;
-            font-size: clamp(1rem, 2.2vw, 1.15rem);
-            color: #4a2535;
-            line-height: 1.95;
+            font-size: clamp(1rem, 2.2vw, 1.12rem);
+            color: #3a1a08;
+            line-height: 2;
             white-space: pre-wrap;
         }
 
@@ -579,13 +627,48 @@
             font-family: 'Playfair Display', serif;
             font-style: italic;
             font-size: 1.1rem;
-            color: var(--rose);
+            color: #8c1c13;
         }
+
+        /* ─── APOTHECARY DIARIES — Hero overrides ───────────── */
+        .hero {
+            background: linear-gradient(160deg, #080300 0%, #1a0800 40%, #280e00 70%, #080300 100%);
+        }
+
+        .hero-lattice {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background-image:
+                repeating-linear-gradient( 45deg, transparent, transparent 26px, rgba(201,168,76,0.055) 26px, rgba(201,168,76,0.055) 27px),
+                repeating-linear-gradient(-45deg, transparent, transparent 26px, rgba(201,168,76,0.055) 26px, rgba(201,168,76,0.055) 27px);
+        }
+
+        .hero::after {
+            background: radial-gradient(ellipse at center, rgba(140,28,19,0.3) 0%, rgba(201,168,76,0.08) 45%, transparent 70%);
+        }
+
+        .hero-badge {
+            border: 1px solid rgba(201,168,76,0.3);
+            padding: 0.4rem 1.6rem;
+            border-radius: 2px;
+            background: rgba(201,168,76,0.06);
+            color: #c9a84c;
+            font-size: clamp(0.6rem, 1.4vw, 0.8rem);
+            letter-spacing: 6px;
+        }
+
+        .hero-name {
+            text-shadow: 0 0 80px rgba(140,28,19,0.65), 0 0 30px rgba(201,168,76,0.2);
+        }
+
+        .hero-sub { color: #e8c9a0; opacity: 0.75; }
 
         @media (max-width: 600px) {
             .gallery-grid { grid-template-columns: repeat(2, 1fr); }
             .gallery-item:first-child { grid-column: span 2; grid-row: span 1; aspect-ratio: 2/1; }
-            .modal-paper { padding: 2.5rem 1.5rem 2rem; }
+            .modal-paper { padding: 3rem 1.5rem 2.5rem; }
+            .letters-grid { grid-template-columns: 1fr; max-width: 340px; }
         }
     </style>
 </head>
@@ -631,7 +714,8 @@
     <!-- Hero -->
     <section class="hero">
         <div class="hearts-container" id="hero-hearts"></div>
-        <div class="hero-badge">✦ &nbsp; Happy Birthday &nbsp; ✦</div>
+        <div class="hero-lattice"></div>
+        <div class="hero-badge">壽 &nbsp; Happy Birthday &nbsp; 壽</div>
         <div class="hero-name" id="js-name">My Love</div>
         <div class="hero-sub">Today is all about you, my darling</div>
         <div class="scroll-hint">↓ &nbsp; scroll &nbsp; ↓</div>
@@ -649,7 +733,7 @@
     <!-- Letters -->
     <section class="letters-section">
         <div class="section-head">
-            <div class="eyebrow">written for you</div>
+            <div class="eyebrow">imperial scrolls</div>
             <div class="section-title">Letters to You</div>
         </div>
         <div class="letters-grid" id="letters-grid"></div>
@@ -719,24 +803,33 @@ const PHOTOS = [
 ];
 
 // Letters — each card opens a modal showing the full letter.
-// Add as many as you like. Replace the body text with your real letters.
 const LETTERS = [
     {
-        seal: "💌",
-        title: "Letter One",
-        body: `Your letter goes here.\n\nWrite whatever is in your heart — there are no rules.\n\nEvery word you put here she will carry with her.`,
+        seal: "🏮",
+        title: "Happy Birthday, Bestie-Girlfriend",
+        body: `Another year older, another year closer to becoming a wise grandma who complains about back pain and tells everyone how things were better in the good old days.
+
+Thank you for being such an amazing person. You're funny, caring, chaotic, and one of the people I trust most. You make my days better just by being in them, and somehow you still manage to put up with me despite all my nonsense.
+
+I hope today is filled with laughter, good food, and everything that makes you happy. And of course, I couldn't forget your other favorite thing: randomly reminding me how much you like my buns. Truly one of your most admirable qualities.
+
+Seriously though, you deserve all the happiness in the world today and every day after.
+
+Love you, dummy. Have the best birthday ever. ❤️`,
         signature: "Forever yours",
     },
     {
-        seal: "🌹",
-        title: "Letter Two",
-        body: `Your second letter goes here.\n\nTake your time with it.`,
-        signature: "Always",
-    },
-    {
-        seal: "✨",
-        title: "Letter Three",
-        body: `Your third letter goes here.`,
+        seal: "🌸",
+        title: "To the World's Biggest Buns Enthusiast",
+        body: `You know, if someone didn't know you, they'd think you had normal hobbies. Then they spend five minutes talking to you and suddenly realize that food and my buns are somehow among your favorite topics.
+
+Honestly, your dedication is impressive. Some people collect stamps, some people play sports, and you? You somehow found a way to become a professional buns admirer. I'm both concerned and honored.
+
+Jokes aside, you're one of the funniest, sweetest, and most amazing people I know. You make me laugh when I need it most, you make ordinary days feel special, and I'm grateful for every moment I get to spend with you.
+
+I hope your birthday is filled with good food, lots of laughter, and enough happiness to last the whole year. And as a special birthday gift, I'll allow exactly three buns-related comments today before I start charging you.
+
+Love you. Happy Birthday ❤️🎉`,
         signature: "With all my love",
     },
 ];
