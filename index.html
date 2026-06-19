@@ -682,6 +682,47 @@
             background: linear-gradient(160deg, #080300 0%, #1a0800 40%, #280e00 70%, #080300 100%);
         }
 
+        /* ─── JS SCROLL REVEAL ───────────────────────────────── */
+        .reveal {
+            opacity: 0;
+            transform: translateY(32px);
+            transition: opacity 0.75s ease, transform 0.75s ease;
+        }
+        .reveal.in {
+            opacity: 1;
+            transform: none;
+        }
+        .reveal-up {
+            opacity: 0;
+            transform: translateY(18px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .reveal-up.in {
+            opacity: 1;
+            transform: none;
+        }
+        .reveal-scale {
+            opacity: 0;
+            transform: scale(0.92) translateY(18px);
+            transition: opacity 0.65s ease, transform 0.65s cubic-bezier(0.34, 1.3, 0.64, 1);
+        }
+        .reveal-scale.in {
+            opacity: 1;
+            transform: none;
+        }
+
+        /* Typewriter cursor */
+        .typewriter-cursor::after {
+            content: '|';
+            animation: cursorBlink 0.75s step-end infinite;
+            color: var(--rose);
+            margin-left: 2px;
+        }
+        @keyframes cursorBlink {
+            0%, 100% { opacity: 1; }
+            50%       { opacity: 0; }
+        }
+
         .hero-lattice {
             position: absolute;
             inset: 0;
@@ -790,7 +831,7 @@
     <!-- Photo Gallery -->
     <section class="gallery-section">
         <div class="section-head">
-            <div class="eyebrow">our memories</div>
+            <div class="eyebrow">my apothecary</div>
             <div class="section-title">Her</div>
         </div>
         <div class="gallery-grid" id="gallery-grid"></div>
@@ -1118,7 +1159,75 @@ function launchConfetti() {
     }
 }
 
-// Reveal birthday page
+// ─── Scroll reveal system ─────────────────────────────────
+const revealObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        e.target.classList.add('in');
+        revealObs.unobserve(e.target);
+    });
+}, { threshold: 0.12, rootMargin: '0px 0px -30px 0px' });
+
+function watchReveal(selector, cls, stagger = 0) {
+    document.querySelectorAll(selector).forEach((el, i) => {
+        el.classList.add(cls);
+        if (stagger) el.style.transitionDelay = `${(i * stagger).toFixed(2)}s`;
+        revealObs.observe(el);
+    });
+}
+
+watchReveal('.section-head',  'reveal-up');
+watchReveal('.reason-card',   'reveal',       0.10);
+watchReveal('.gallery-item',  'reveal-scale', 0.08);
+watchReveal('.letter-card',   'reveal',       0.18);
+
+// Closing section — staggered + typewriter
+const closingMsgEl = document.getElementById('js-closing');
+const closingText  = closingMsgEl.textContent;
+closingMsgEl.textContent = '';
+let closingDone = false;
+
+['.closing-heart', '.closing-sig'].forEach(s => {
+    document.querySelector(s)?.classList.add('reveal-up');
+});
+
+const closingObs = new IntersectionObserver((entries) => {
+    if (!entries[0].isIntersecting || closingDone) return;
+    closingDone = true;
+
+    setTimeout(() => document.querySelector('.closing-heart')?.classList.add('in'), 100);
+    setTimeout(() => document.querySelector('.closing-sig')?.classList.add('in'),   600);
+
+    // Typewriter
+    closingMsgEl.classList.add('typewriter-cursor');
+    let idx = 0;
+    const tw = setInterval(() => {
+        closingMsgEl.textContent += closingText[idx++];
+        if (idx >= closingText.length) {
+            clearInterval(tw);
+            closingMsgEl.classList.remove('typewriter-cursor');
+        }
+    }, 38);
+
+    closingObs.unobserve(entries[0].target);
+}, { threshold: 0.25 });
+closingObs.observe(document.querySelector('.closing-section'));
+
+// ─── Hero entrance (called after countdown reveal) ─────────
+function heroEntrance() {
+    ['.hero-badge', '.hero-name', '.hero-sub'].forEach((sel, i) => {
+        const el = document.querySelector(sel);
+        if (!el) return;
+        el.style.cssText += 'opacity:0;transform:translateY(24px);transition:none;';
+        setTimeout(() => {
+            el.style.transition = 'opacity 0.9s ease, transform 0.9s ease';
+            el.style.opacity    = '1';
+            el.style.transform  = 'translateY(0)';
+        }, 200 + i * 220);
+    });
+}
+
+// ─── Reveal birthday page ──────────────────────────────────
 let revealed = false;
 function reveal() {
     if (revealed) return;
@@ -1135,6 +1244,7 @@ function reveal() {
         cancelAnimationFrame(petalRaf);
         cdScreen.style.display = 'none';
         main.style.opacity = '1';
+        heroEntrance();
         setInterval(() => spawnHeart(heroHearts), 900);
     }, 1600);
 }
